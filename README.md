@@ -1,3 +1,3 @@
 # Steganography
-Library to hide text in png picture
-You need to have zlib 1.3.1 or latest to use this library
+Library to hide text in png picture.  
+This library uses https://github.com/nothings/stb
