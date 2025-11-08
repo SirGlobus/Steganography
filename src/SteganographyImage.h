@@ -26,37 +26,8 @@ public:
         stbi_image_free(data);
     }
 
-    std::string GetText()
-    {
-        int textsize = 0;
-        for(int i = 0; i < 31; ++i)
-            textsize |= (GetBit(i) << i);
-        std::string ret;
-        for(int i = 0; i < textsize; ++i)
-        {
-            uint8_t c = 0;
-            for(int j = 0; j < 8; ++j)
-                c |= (GetBit(i*8+32+j) << j);
-            ret.push_back(c);
-        }
-        return ret;
-    }
-
-    void PushText(std::string s)
-    {
-        int textsize = s.length();
-        if(textsize*2 + 8 > pixels.size())
-            throw std::runtime_error("Text to push is too big");
-        for(int i = 0; i < 31; ++i)
-            SetBit(i, ((textsize & (1 << i)) ? 1 : 0));
-            
-        for(int i = 0; i < textsize; ++i)
-        {
-            uint8_t c = s[i];
-            for(int j = 0; j < 8; ++j)
-                SetBit(i*8+32+j, ((c & (1 << j)) ? 1 : 0));
-        }
-    }
+    virtual std::string GetText() = 0;
+    virtual void PushText(std::string s) = 0;
 
     bool SaveTo(std::string path)
     {
@@ -67,7 +38,7 @@ public:
     {
         return SaveTo(this->path);
     }
-private:
+protected:
     struct Pixel
     {
         uint8_t r, g, b, a;
@@ -76,7 +47,7 @@ private:
     std::string path;
     int width, height, channels;
 
-    void SetBit(int bit, int v)
+    virtual void SetBit(int bit, int v)
     {
         uint8_t* pos;
         int pixel = bit / 4;
@@ -100,7 +71,7 @@ private:
         else
             *pos &= 254;
     }
-    int GetBit(int bit)
+    virtual int GetBit(int bit)
     {
         uint8_t* pos;
         int pixel = bit / 4;
