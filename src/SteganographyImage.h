@@ -38,6 +38,17 @@ public:
     {
         return SaveTo(this->path);
     }
+
+    void Set0()
+    {
+        for(int i = 0; i < pixels.size() * 4; ++i)
+            SetBit(i, 0);
+    }
+    void Set1()
+    {
+        for(int i = 0; i < pixels.size() * 4; ++i)
+            SetBit(i, 1);
+    }
 protected:
     struct Pixel
     {
